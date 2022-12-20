@@ -7,7 +7,7 @@ packer {
   }
 }
 source "amazon-ebs" "packer-ami-manisha-node" {
-  ami_name      = "packer-ami-manisha-nodejs-application"
+  ami_name      = "packer-ami-manisha-nodejs-application-1"
   source_ami    = "ami-0ada6d94f396377f2"
   instance_type = "t3a.small"
   region        = "us-east-2"

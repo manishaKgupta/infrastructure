@@ -1,12 +1,9 @@
 #!/bin/bash
 sudo apt update && sudo apt upgrade -y
-sudo apt autoremove --purge
-sudo apt autoclean
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 sudo apt-get install nodejs
 sudo npm install -g npm@latest
 sudo npm install -g pm2@latest
-sudo apt install collectd -y
 sudo apt install awscli -y
 cd $HOME
 #install cloudwatch-agent and configure using ssm
