@@ -34,7 +34,8 @@ resource "aws_security_group" "Security-mongo-manisha" {
     from_port        = 22
     to_port          = 22
     protocol         = "tcp"
-    cidr_blocks      = [module.vpc.vpc_cidr_block]
+    cidr_blocks      = [resource.aws_security_group.pritunl-vpn-sg.id]
+    #cidr_blocks      = [module.vpc.vpc_cidr_block]
   }
 
  ingress {
