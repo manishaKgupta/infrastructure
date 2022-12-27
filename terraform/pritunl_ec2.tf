@@ -5,13 +5,12 @@ module "pritunl" {
   ami                    = "ami-0ada6d94f396377f2"
   instance_type          = "t3a.micro"
   key_name               = "manisha_mern_key"
-  monitoring             = true
   vpc_security_group_ids = [aws_security_group.pritunl-vpn-sg.id]
   subnet_id              = element(module.vpc.public_subnets, 0)
   user_data = filebase64("./pritunl_vpn_dependency.sh")
   tags = {
     Terraform   = "true"
-    Environment = "production"
+    Environment = "pritunl-vpn"
     owner = "manisha"
   }
 }
@@ -27,6 +26,13 @@ resource "aws_security_group" "pritunl-vpn-sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+    ingress {
+    description = "TLS from VPC"
+    from_port   = 11221
+    to_port     = 11221
+    protocol    = "udp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {

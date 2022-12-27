@@ -27,23 +27,37 @@ module "asg" {
   launch_template_description = "Launch template for creating the node application"
   update_default_version      = true
 
-  image_id          = "ami-0fa60f31acd08a600"
+  image_id          = "ami-0ac786bb439d4673b"
   instance_type     = "t3a.micro"
-  ebs_optimized     = true
-  enable_monitoring = true
   key_name = "manisha_mern_key"
   user_data = filebase64("cw_agent.sh")
   security_groups = [resource.aws_security_group.Security-node-manisha.id]
-
-  ######target_group arn_mention_using_variable
-  #target_group_arns = [var.target_group_arns]
-
   target_group_arns = module.alb.target_group_arns
+
+
+  # IAM role & instance profile
+  create_iam_instance_profile = true
+  iam_role_name               = "codedeploy-role-manisha"
+  iam_role_path               = "/ec2/"
+  iam_role_description        = "IAM role for SSM, Code Deploy and S3 access"
+  iam_role_tags = {
+    CustomIamRole = "Yes"
+  }
+  iam_role_policies = {
+    AmazonEC2 = "arn:aws:iam::aws:policy/AmazonEC2FullAccess",
+    AmazonCodeDeploy = "arn:aws:iam::aws:policy/AWSCodeDeployFullAccess",
+    AmazonS3Access = "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+    AmazonEC2ForCodeDeploy = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy"
+    AmazonEc2ForSSM = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+    AmazonSSMAccess = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
+
+
+  }
 
 
 
 #Attach IAM role for SSM access to run wizard, Code deploy and other policies
-iam_instance_profile_name = "codedeploy_role_for_ec2"
+#iam_instance_profile_name = "codedeploy_role_for_ec2"
 
 }
 
@@ -95,12 +109,3 @@ resource "aws_security_group" "Security-node-manisha" {
 }
 
 ########################################################################################################################
-
-
-#variable "target_group_arns" {
-#    default="arn:aws:elasticloadbalancing:us-east-2:421320058418:targetgroup/maniTG20221216065852411700000001/57a2c8d3f586d877"
-
-#}
-
-
-#########################################################################################################################
